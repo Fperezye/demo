@@ -8,6 +8,6 @@ import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IngredientJPARepository  extends ReactiveCrudRepository<Ingredient, UUID> {
+public interface IngredientReactiveRepository  extends ReactiveCrudRepository<Ingredient, UUID> {
 
 }

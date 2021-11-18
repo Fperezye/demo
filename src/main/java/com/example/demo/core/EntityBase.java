@@ -20,10 +20,15 @@ public @Getter @Setter abstract class EntityBase implements Persistable<UUID>{
     
     @Id
     @Column(columnDefinition = "binary(16)")
-    private UUID id;
+    protected UUID id;
 
     @Transient
-    private boolean isThisNew = false;
+    protected boolean isThisNew = false;
+
+    @Override
+    public boolean isNew() {
+        return this.isThisNew;
+    }
 
     @Override
     public boolean equals (Object obj) {

@@ -11,16 +11,16 @@ import reactor.core.publisher.Mono;
 @Repository
 public class IngredientRepositoryImp implements IngredientRepository{
 
-    private final IngredientJPARepository ingredientJPARepository;
+    private final IngredientReactiveRepository ingredientReactiveRepository;
 
     @Autowired
-    public IngredientRepositoryImp(IngredientJPARepository ingredientJPARepository){
-        this.ingredientJPARepository = ingredientJPARepository;
+    public IngredientRepositoryImp(IngredientReactiveRepository ingredientReactiveRepository){
+        this.ingredientReactiveRepository = ingredientReactiveRepository;
     }
 
     @Override
     public Mono<Ingredient> add(Ingredient ingredient) {
-        return this.ingredientJPARepository.save(ingredient);
+        return this.ingredientReactiveRepository.save(ingredient);
     }
     
 }

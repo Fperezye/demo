@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Table("Ingredients")
+@Table("ingredients")
 public @NoArgsConstructor @Getter @Setter class Ingredient extends EntityBase{
 
     @Column("name")
@@ -19,16 +19,5 @@ public @NoArgsConstructor @Getter @Setter class Ingredient extends EntityBase{
 
     @Column("price")
     private BigDecimal price;
-
-    @Override
-    public String toString() {
-
-        return String.format("Ingredient {id: %s, name: %s, price: %s}", this.getId(), this.getName(), this.getPrice());
-    }
-
-    @Override
-    public boolean isNew() {
-        return this.isThisNew();
-    }
 
 }

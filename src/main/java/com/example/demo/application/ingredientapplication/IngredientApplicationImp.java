@@ -24,10 +24,10 @@ public class IngredientApplicationImp implements IngredientApplication{
     }
 
     @Override
-    public Mono<IngredientDTOOut> add(IngredientDTOIn dto) {
-        Ingredient add = modelMapper.map(dto, Ingredient.class);
-        add.setId(UUID.randomUUID());
-        add.setThisNew(true);
-        return this.ingredientRepository.add(add).flatMap(ingredient -> Mono.just(this.modelMapper.map(ingredient, IngredientDTOOut.class)));
+    public Mono<IngredientDTOOut> add(IngredientDTOIn ingredientDTOIn) {
+        Ingredient ingredient = modelMapper.map(ingredientDTOIn, Ingredient.class);
+        ingredient.setId(UUID.randomUUID());
+        ingredient.setThisNew(true);
+        return this.ingredientRepository.add(ingredient).flatMap(entity -> Mono.just(this.modelMapper.map(entity, IngredientDTOOut.class)));
     }
 }

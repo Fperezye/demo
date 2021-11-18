@@ -14,4 +14,6 @@ public @Getter @Setter @NoArgsConstructor class IngredientDTOOut{
     private String name;
 
     private BigDecimal price;
+
+    
 }
