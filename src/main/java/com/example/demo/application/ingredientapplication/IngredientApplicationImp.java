@@ -51,6 +51,13 @@ public class IngredientApplicationImp extends ApplicationBase<Ingredient, UUID> 
             }   
         });
     } 
+
+    @Override
+    public Mono<IngredientDTOOut> delete(UUID id) {
+        return this.findById(id).flatMap(
+            ingredient -> this.ingredientRepository.delete(ingredient).then(Mono.just(this.modelMapper.map(ingredient, IngredientDTOOut.class)))
+        );
+    }
 }
 
 

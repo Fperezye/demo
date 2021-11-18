@@ -35,4 +35,8 @@ public class IngredientRepositoryImp implements IngredientRepository{
         return this.ingredientReactiveRepository.save(ingredient);
     }
     
+    @Override
+    public Mono<Void> delete(Ingredient ingredient) {
+        return this.ingredientReactiveRepository.delete(ingredient);
+    }
 }
