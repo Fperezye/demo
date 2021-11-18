@@ -38,7 +38,8 @@ public class CustomConverters {
     public class ByteArrayToUUIDConverter implements Converter<byte[], UUID> {
         @Override
         public UUID convert(byte[] source) {
-            return UUID.nameUUIDFromBytes(source);
+            ByteBuffer bb = ByteBuffer.wrap(source);
+            return new UUID(bb.getLong(), bb.getLong());
         }
     }
     

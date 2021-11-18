@@ -1,5 +1,7 @@
 package com.example.demo.infraestructure.ingredientinfraestructure;
 
+import java.util.UUID;
+
 import com.example.demo.domain.ingredientdomain.Ingredient;
 import com.example.demo.domain.ingredientdomain.IngredientRepository;
 
@@ -21,6 +23,11 @@ public class IngredientRepositoryImp implements IngredientRepository{
     @Override
     public Mono<Ingredient> add(Ingredient ingredient) {
         return this.ingredientReactiveRepository.save(ingredient);
+    }
+
+    @Override
+    public Mono<Ingredient> findById(UUID id) {
+        return this.ingredientReactiveRepository.findById(id);
     }
     
 }
