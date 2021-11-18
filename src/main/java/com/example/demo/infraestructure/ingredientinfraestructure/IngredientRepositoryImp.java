@@ -29,5 +29,10 @@ public class IngredientRepositoryImp implements IngredientRepository{
     public Mono<Ingredient> findById(UUID id) {
         return this.ingredientReactiveRepository.findById(id);
     }
+
+    @Override
+    public Mono<Ingredient> update(Ingredient ingredient) {
+        return this.ingredientReactiveRepository.save(ingredient);
+    }
     
 }

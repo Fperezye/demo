@@ -8,4 +8,6 @@ import reactor.core.publisher.Mono;
 
 public interface IngredientRepository extends FindById<Ingredient, UUID> {
     public Mono<Ingredient> add(Ingredient ingredient);
+    public Mono<Ingredient> update(Ingredient ingredient);
+    
 }

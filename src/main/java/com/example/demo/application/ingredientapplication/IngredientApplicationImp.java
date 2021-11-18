@@ -36,7 +36,21 @@ public class IngredientApplicationImp extends ApplicationBase<Ingredient, UUID> 
 
     @Override
     public Mono<IngredientDTOOut> get(UUID id) {
-
         return this.findById(id).flatMap( dbingredient -> Mono.just(this.modelMapper.map(dbingredient, IngredientDTOOut.class)));
     }
+
+    @Override
+    public Mono<IngredientDTOOut> update(UUID id, IngredientDTOIn ingredientDTOIn) {
+        return this.findById(id).flatMap( dbIngredient -> {
+            if(dbIngredient.getName().equals(ingredientDTOIn.getName())){
+                this.modelMapper.map(ingredientDTOIn, dbIngredient);
+                return this.ingredientRepository.update(dbIngredient).flatMap(ingredient -> Mono.just(this.modelMapper.map(ingredient, IngredientDTOOut.class)));
+            } else{
+                this.modelMapper.map(ingredientDTOIn, dbIngredient);
+                return this.ingredientRepository.update(dbIngredient).flatMap(ingredient -> Mono.just(this.modelMapper.map(ingredient, IngredientDTOOut.class)));
+            }   
+        });
+    } 
 }
+
+
