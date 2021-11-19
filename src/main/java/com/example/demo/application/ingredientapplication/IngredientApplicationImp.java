@@ -4,25 +4,31 @@ import java.util.UUID;
 
 import com.example.demo.core.ApplicationBase;
 import com.example.demo.domain.ingredientdomain.Ingredient;
-import com.example.demo.domain.ingredientdomain.IngredientRepository;
+import com.example.demo.domain.ingredientdomain.IngredientProjection;
+import com.example.demo.domain.ingredientdomain.IngredientReadRepository;
+import com.example.demo.domain.ingredientdomain.IngredientWriteRepository;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
 public class IngredientApplicationImp extends ApplicationBase<Ingredient, UUID> implements IngredientApplication{
 
-    private final IngredientRepository ingredientRepository;
+    private final IngredientWriteRepository ingredientWriteRepository;
+    private final IngredientReadRepository ingredientReadRepository;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public IngredientApplicationImp (final IngredientRepository ingredientRepository, final ModelMapper modelMapper){
-        super((id) -> ingredientRepository.findById(id));
+    public IngredientApplicationImp (final IngredientWriteRepository ingredientWriteRepository, final IngredientReadRepository ingredientReadRepository, 
+    final ModelMapper modelMapper){
+        super((id) -> ingredientWriteRepository.findById(id));
 
-        this.ingredientRepository = ingredientRepository;
+        this.ingredientReadRepository = ingredientReadRepository;
+        this.ingredientWriteRepository = ingredientWriteRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -31,7 +37,7 @@ public class IngredientApplicationImp extends ApplicationBase<Ingredient, UUID> 
         Ingredient ingredient = modelMapper.map(ingredientDTOIn, Ingredient.class);
         ingredient.setId(UUID.randomUUID());
         ingredient.setThisNew(true);
-        return this.ingredientRepository.add(ingredient).flatMap(entity -> Mono.just(this.modelMapper.map(entity, IngredientDTOOut.class)));
+        return this.ingredientWriteRepository.add(ingredient).flatMap(entity -> Mono.just(this.modelMapper.map(entity, IngredientDTOOut.class)));
     }
 
     @Override
@@ -44,10 +50,10 @@ public class IngredientApplicationImp extends ApplicationBase<Ingredient, UUID> 
         return this.findById(id).flatMap( dbIngredient -> {
             if(dbIngredient.getName().equals(ingredientDTOIn.getName())){
                 this.modelMapper.map(ingredientDTOIn, dbIngredient);
-                return this.ingredientRepository.update(dbIngredient).flatMap(ingredient -> Mono.just(this.modelMapper.map(ingredient, IngredientDTOOut.class)));
+                return this.ingredientWriteRepository.update(dbIngredient).flatMap(ingredient -> Mono.just(this.modelMapper.map(ingredient, IngredientDTOOut.class)));
             } else{
                 this.modelMapper.map(ingredientDTOIn, dbIngredient);
-                return this.ingredientRepository.update(dbIngredient).flatMap(ingredient -> Mono.just(this.modelMapper.map(ingredient, IngredientDTOOut.class)));
+                return this.ingredientWriteRepository.update(dbIngredient).flatMap(ingredient -> Mono.just(this.modelMapper.map(ingredient, IngredientDTOOut.class)));
             }   
         });
     } 
@@ -55,8 +61,13 @@ public class IngredientApplicationImp extends ApplicationBase<Ingredient, UUID> 
     @Override
     public Mono<IngredientDTOOut> delete(UUID id) {
         return this.findById(id).flatMap(
-            ingredient -> this.ingredientRepository.delete(ingredient).then(Mono.just(this.modelMapper.map(ingredient, IngredientDTOOut.class)))
+            ingredient -> this.ingredientWriteRepository.delete(ingredient).then(Mono.just(this.modelMapper.map(ingredient, IngredientDTOOut.class)))
         );
+    }
+
+    @Override
+    public Flux<IngredientProjection> getAll(String name, int page, int size) {
+        return this.ingredientReadRepository.getAll(name, page, size);
     }
 }
 

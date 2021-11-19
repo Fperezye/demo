@@ -3,15 +3,18 @@ package com.example.demo.infraestructure.ingredientinfraestructure;
 import java.util.UUID;
 
 import com.example.demo.domain.ingredientdomain.Ingredient;
-import com.example.demo.domain.ingredientdomain.IngredientRepository;
+import com.example.demo.domain.ingredientdomain.IngredientProjection;
+import com.example.demo.domain.ingredientdomain.IngredientReadRepository;
+import com.example.demo.domain.ingredientdomain.IngredientWriteRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository
-public class IngredientRepositoryImp implements IngredientRepository{
+public class IngredientRepositoryImp implements IngredientWriteRepository, IngredientReadRepository{
 
     private final IngredientReactiveRepository ingredientReactiveRepository;
 
@@ -38,5 +41,15 @@ public class IngredientRepositoryImp implements IngredientRepository{
     @Override
     public Mono<Void> delete(Ingredient ingredient) {
         return this.ingredientReactiveRepository.delete(ingredient);
+    }
+
+    @Override
+    public Flux<IngredientProjection> getAll(String name, int page, int size) {
+        return this.ingredientReactiveRepository.findByCriteria(name, size, page);
+    }
+
+    @Override
+    public Mono<Boolean> exists(String name) {
+        return this.ingredientReactiveRepository.existsByName(name);
     }
 }
