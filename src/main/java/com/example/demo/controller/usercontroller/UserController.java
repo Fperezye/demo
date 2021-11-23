@@ -61,10 +61,10 @@ public class UserController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public Flux<UserProjection> getAll(
-        @RequestParam(required = false) String name,
+        @RequestParam(required = false) String firstname,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size
     ){
-        return this.userApplication.getAll(name, page, size);
+        return this.userApplication.getAll(firstname, page, size);
     }
 }

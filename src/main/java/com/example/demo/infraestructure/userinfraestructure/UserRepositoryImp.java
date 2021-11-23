@@ -44,12 +44,12 @@ public class UserRepositoryImp implements UserWriteRepository, UserReadRepositor
     }
 
     @Override
-    public Flux<UserProjection> getAll(String name, int page, int size) {
-        return this.userReactiveRepository.findByCriteria(name, size, page);
+    public Flux<UserProjection> getAll(String firstname, int page, int size) {
+        return this.userReactiveRepository.findByCriteria(firstname, size, page);
     }
 
     @Override
-    public Mono<Boolean> exists(String name) {
-        return this.userReactiveRepository.existsByName(name);
+    public Mono<Boolean> exists(String firstname) {
+        return this.userReactiveRepository.existsByName(firstname);
     }
 }

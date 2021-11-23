@@ -12,5 +12,5 @@ public interface UserApplication {
     public Mono<UserDTOOut> get(UUID id);
     public Mono<UserDTOOut> update(UUID id, UserDTOIn ingredientDTOIn);
     public Mono<UserDTOOut> delete(UUID id);
-    public Flux<UserProjection> getAll(String name,  int page, int size);
+    public Flux<UserProjection> getAll(String firstname,  int page, int size);
 }

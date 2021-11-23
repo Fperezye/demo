@@ -1,7 +1,5 @@
 package com.example.demo.domain.userdomain;
 
-import java.math.BigDecimal;
-
 import com.example.demo.core.EntityBase;
 
 import org.springframework.data.relational.core.mapping.Column;
@@ -14,10 +12,12 @@ import lombok.Setter;
 @Table("users")
 public @NoArgsConstructor @Getter @Setter class User extends EntityBase{
 
-    @Column("name")
-    private String name;
-
-    @Column("price")
-    private BigDecimal price;
-
+    @Column("firstname")
+    private String firstname;
+    @Column("lastname")
+    private String lastname;
+    @Column("email")
+    private String email;
+    @Column("password")
+    private String password;
 }

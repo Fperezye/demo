@@ -1,6 +1,5 @@
 package com.example.demo.application.userapplication;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 import lombok.Getter;
@@ -11,9 +10,9 @@ public @Getter @Setter @NoArgsConstructor class UserDTOOut{
     
     private UUID id;
     
-    private String name;
-
-    private BigDecimal price;
-
+    private String firstname;
+    private String lastname;
+    private String email;
+    private String password;
     
 }

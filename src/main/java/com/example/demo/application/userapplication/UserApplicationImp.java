@@ -48,7 +48,7 @@ public class UserApplicationImp extends ApplicationBase<User, UUID> implements U
     @Override
     public Mono<UserDTOOut> update(UUID id, UserDTOIn userDTOIn) {
         return this.findById(id).flatMap( dbUser -> {
-            if(dbUser.getName().equals(userDTOIn.getName())){
+            if(dbUser.getFirstname().equals(userDTOIn.getFirstname())){
                 this.modelMapper.map(userDTOIn, dbUser);
                 return this.userWriteRepository.update(dbUser).flatMap(user -> Mono.just(this.modelMapper.map(user, UserDTOOut.class)));
             } else{
@@ -66,8 +66,8 @@ public class UserApplicationImp extends ApplicationBase<User, UUID> implements U
     }
 
     @Override
-    public Flux<UserProjection> getAll(String name, int page, int size) {
-        return this.userReadRepository.getAll(name, page, size);
+    public Flux<UserProjection> getAll(String firstname, int page, int size) {
+        return this.userReadRepository.getAll(firstname, page, size);
     }
 }
 
