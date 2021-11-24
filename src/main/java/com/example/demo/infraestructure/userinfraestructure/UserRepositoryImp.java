@@ -49,7 +49,7 @@ public class UserRepositoryImp implements UserWriteRepository, UserReadRepositor
     }
 
     @Override
-    public Mono<Boolean> exists(String firstname) {
+    public Mono<Integer> exists(String firstname) {
         return this.userReactiveRepository.existsByName(firstname);
     }
 }

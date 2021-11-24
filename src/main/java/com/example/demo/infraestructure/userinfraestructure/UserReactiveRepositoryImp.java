@@ -20,6 +20,6 @@ public interface UserReactiveRepositoryImp  extends ReactiveCrudRepository<User,
     Flux<UserProjection> findByCriteria(@Param("firstname") String firstname, int size, int page);
 
     @Query("SELECT CASE WHEN COUNT(id)>0 THEN true ELSE false END FROM users WHERE firstname = :firstname")
-    Mono<Boolean> existsByName(String firstname);
+    Mono<Integer> existsByName(String firstname);
 
 }
