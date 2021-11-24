@@ -49,7 +49,8 @@ public class IngredientRepositoryImp implements IngredientWriteRepository, Ingre
     }
 
     @Override
-    public Mono<Boolean> exists(String name) {
+    public Mono<Integer> exists(String name) {
         return this.ingredientReactiveRepository.existsByName(name);
     }
+
 }
