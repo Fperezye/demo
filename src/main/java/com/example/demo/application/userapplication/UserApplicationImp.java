@@ -11,6 +11,7 @@ import com.example.demo.domain.userdomain.UserWriteRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.mindrot.jbcrypt.BCrypt;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -36,6 +37,7 @@ public class UserApplicationImp extends ApplicationBase<User, UUID> implements U
     public Mono<UserDTOOut> add(UserDTOIn userDTOIn) {
         User user = modelMapper.map(userDTOIn, User.class);
         user.setId(UUID.randomUUID());
+        user.setPassword(BCrypt.hashpw(userDTOIn.getPassword(), BCrypt.gensalt()));
         user.setThisNew(true);
         return this.userWriteRepository.add(user).flatMap(entity -> Mono.just(this.modelMapper.map(entity, UserDTOOut.class)));
     }
