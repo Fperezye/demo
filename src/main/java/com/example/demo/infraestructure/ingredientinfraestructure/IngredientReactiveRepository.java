@@ -14,12 +14,12 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository
-public interface IngredientReactiveRepository  extends ReactiveCrudRepository<Ingredient, UUID> {
+public interface IngredientReactiveRepository extends ReactiveCrudRepository<Ingredient, UUID> {
 
     @Query("SELECT i.id, i.name, i.price FROM ingredients i WHERE (:name is NULL OR i.name LIKE concat('%', :name, '%')) limit :size offset :page")
     Flux<IngredientProjection> findByCriteria(@Param("name") String name, int size, int page);
 
-    @Query("SELECT CASE WHEN COUNT(id)>0 THEN true ELSE false END FROM ingredients WHERE name = :name")
-    Mono<Boolean> existsByName(String name);
+    @Query("SELECT CASE WHEN count(id)>0 THEN 1 ELSE 0 END FROM ingredients WHERE name = :name")
+    Mono<Integer> existsByName(@Param("name") String name);
 
 }
