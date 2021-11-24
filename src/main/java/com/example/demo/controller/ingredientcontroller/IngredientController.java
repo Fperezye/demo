@@ -51,9 +51,8 @@ public class IngredientController {
     }
 
     @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, path = "/{id}")
-    public Mono<ResponseEntity<IngredientDTOOut>> update(@PathVariable UUID id, @Valid @RequestBody IngredientDTOIn ingredientDTOIn) {
-        Mono<IngredientDTOOut> ingredientDTOOut = this.ingredientApplication.update(id, ingredientDTOIn);
-        return ingredientDTOOut.map(ingredient -> ResponseEntity.ok(ingredient)).defaultIfEmpty(ResponseEntity.notFound().build());
+    public Mono<ResponseEntity<Void>> update(@PathVariable UUID id, @Valid @RequestBody IngredientDTOIn ingredientDTOIn) {
+        return this.ingredientApplication.update(id, ingredientDTOIn).map(response -> ResponseEntity.ok().<Void>build()).defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping(path = "/{id}")

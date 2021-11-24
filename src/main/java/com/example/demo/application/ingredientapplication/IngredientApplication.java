@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 public interface IngredientApplication {
     public Mono<IngredientDTOOut> add(IngredientDTOIn ingredientDTOIn);
     public Mono<IngredientDTOOut> get(UUID id);
-    public Mono<IngredientDTOOut> update(UUID id, IngredientDTOIn ingredientDTOIn);
+    public Mono<Void> update(UUID id, IngredientDTOIn ingredientDTOIn);
     public Mono<IngredientDTOOut> delete(UUID id);
     public Flux<IngredientProjection> getAll(String name,  int page, int size);
 }
