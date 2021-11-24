@@ -40,7 +40,7 @@ public class IngredientController {
       
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    @ResponseBody Mono<IngredientDTOOut> add(@Valid @RequestBody IngredientDTOIn ingredientDTOIn) {
+    @ResponseBody public Mono<IngredientDTOOut> add(@Valid @RequestBody IngredientDTOIn ingredientDTOIn) {
         return this.ingredientApplication.add(ingredientDTOIn);
     }
 

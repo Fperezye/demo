@@ -9,6 +9,7 @@ import com.example.demo.domain.ingredientdomain.IngredientReadRepository;
 import com.example.demo.domain.ingredientdomain.IngredientWriteRepository;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,15 +22,17 @@ public class IngredientApplicationImp extends ApplicationBase<Ingredient, UUID> 
     private final IngredientWriteRepository ingredientWriteRepository;
     private final IngredientReadRepository ingredientReadRepository;
     private final ModelMapper modelMapper;
+    private final Logger logger;
 
     @Autowired
     public IngredientApplicationImp (final IngredientWriteRepository ingredientWriteRepository, final IngredientReadRepository ingredientReadRepository, 
-    final ModelMapper modelMapper){
+    final ModelMapper modelMapper, final Logger logger){
         super((id) -> ingredientWriteRepository.findById(id));
 
         this.ingredientReadRepository = ingredientReadRepository;
         this.ingredientWriteRepository = ingredientWriteRepository;
         this.modelMapper = modelMapper;
+        this.logger = logger;
     }
 
     @Override
@@ -39,7 +42,10 @@ public class IngredientApplicationImp extends ApplicationBase<Ingredient, UUID> 
         ingredient.setThisNew(true);
         return ingredient.validate("name", ingredient.getName(), (name) -> this.ingredientWriteRepository.exists(name))
         .then(this.ingredientWriteRepository.add(ingredient))
-        .flatMap(entity -> Mono.just(this.modelMapper.map(entity, IngredientDTOOut.class)));
+        .flatMap(entity -> {
+            logger.info(this.serializeObject(entity, "added")); 
+            return Mono.just(this.modelMapper.map(entity, IngredientDTOOut.class));
+        });
     }
 
     @Override
@@ -58,16 +64,21 @@ public class IngredientApplicationImp extends ApplicationBase<Ingredient, UUID> 
                 this.modelMapper.map(ingredientDTOIn, dbIngredient);
                 return dbIngredient.validate("name", dbIngredient.getName(), (name) -> this.ingredientWriteRepository.exists(name))
                 .then(this.ingredientWriteRepository.update(dbIngredient))
-                .flatMap(ingredient -> Mono.just(this.modelMapper.map(ingredient, IngredientDTOOut.class)));
+                .flatMap(ingredient -> {
+                    logger.info(this.serializeObject(dbIngredient, "updated")); 
+                    return Mono.just(this.modelMapper.map(ingredient, IngredientDTOOut.class));
+                });
             }   
         });
     } 
 
     @Override
     public Mono<IngredientDTOOut> delete(UUID id) {
-        return this.findById(id).flatMap(
-            ingredient -> this.ingredientWriteRepository.delete(ingredient).then(Mono.just(this.modelMapper.map(ingredient, IngredientDTOOut.class)))
-        );
+        return this.findById(id).flatMap(ingredient -> {
+            logger.info(this.serializeObject(ingredient, "deleted")); 
+            return this.ingredientWriteRepository.delete(ingredient)
+            .then(Mono.just(this.modelMapper.map(ingredient, IngredientDTOOut.class)));
+        });
     }
 
     @Override
