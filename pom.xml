@@ -97,17 +97,12 @@
 			<groupId>org.springframework.boot</groupId> 
 			<artifactId>spring-boot-starter-validation</artifactId> 
 		</dependency>
-<<<<<<< HEAD
-		
-	</dependencies>
-=======
 		<!-- logger -->
 		<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
 	</dependencies>		
->>>>>>> e369c8dc76055090c439b8b6ab3cf3ac56687e56
 
 	<build>
 		<plugins>
