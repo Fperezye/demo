@@ -1,18 +1,11 @@
 package com.example.demo.application.userapplication;
 
-import java.util.UUID;
-
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-public @Getter @Setter @NoArgsConstructor class UserDTOOut{
-    
-    private UUID id;
-    
-    private String firstname;
-    private String lastname;
-    private String email;
-    private String password;
-    
+public @Getter @Setter class UserDtoOut {
+    private String type;
+    private String token;
+    private String expireSeconds = "3600";
+    private String refreshToken;
 }

@@ -20,4 +20,19 @@ public @NoArgsConstructor @Getter @Setter class User extends EntityBase{
     private String email;
     @Column("password")
     private String password;
+    @Column("rol")
+    private String rol;
+
+    @Override
+    public String toString() {
+
+        return String.format("User {id: %s, name: %s, lastName: %s, email: %s, rol: %s}", this.getId(), this.getFirstname(),
+                this.getLastname(), this.getEmail(), this.getRol());
+    }
+
+    @Override
+    public boolean isNew() {
+        return this.isThisNew();
+    }
+
 }
