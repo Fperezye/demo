@@ -7,12 +7,10 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.validation.annotation.Validated;
-
 import lombok.Getter;
 import lombok.Setter;
 
-@Validated
+
 public @Getter @Setter class IngredientDTOIn {
     @NotBlank
     private String name;
