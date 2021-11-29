@@ -1,4 +1,4 @@
-package com.example.demo.infraestructure.ingredientinfraestructure;
+package com.example.demo.infraestructure.ingredientrepository;
 
 import java.util.UUID;
 
@@ -8,6 +8,6 @@ import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IngredientReactiveRepository  extends ReactiveCrudRepository<Ingredient, UUID> {
+public interface IngredientReactiveRepository extends ReactiveCrudRepository<Ingredient, UUID> {
 
 }

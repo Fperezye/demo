@@ -1,4 +1,4 @@
-package com.example.demo.infraestructure.ingredientinfraestructure;
+package com.example.demo.infraestructure.ingredientrepository;
 
 import com.example.demo.domain.ingredientdomain.Ingredient;
 import com.example.demo.domain.ingredientdomain.IngredientRepository;
@@ -9,12 +9,12 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
 @Repository
-public class IngredientRepositoryImp implements IngredientRepository{
+public class IngredientRepositoryImp implements IngredientRepository {
 
     private final IngredientReactiveRepository ingredientReactiveRepository;
 
     @Autowired
-    public IngredientRepositoryImp(IngredientReactiveRepository ingredientReactiveRepository){
+    public IngredientRepositoryImp(IngredientReactiveRepository ingredientReactiveRepository) {
         this.ingredientReactiveRepository = ingredientReactiveRepository;
     }
 
@@ -22,5 +22,5 @@ public class IngredientRepositoryImp implements IngredientRepository{
     public Mono<Ingredient> add(Ingredient ingredient) {
         return this.ingredientReactiveRepository.save(ingredient);
     }
-    
+
 }
