@@ -5,7 +5,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.Email;
 
-
 public @Getter @Setter class UserDTOIn {    
     @NotBlank @Size(min=8, max=16)
     private String firstname;
@@ -18,5 +17,5 @@ public @Getter @Setter class UserDTOIn {
     private String type;
     private String token;
     private String rol;
-   
+    private String provider;
 }

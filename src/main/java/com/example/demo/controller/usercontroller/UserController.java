@@ -49,9 +49,8 @@ public class UserController {
     }
 
     @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, path = "/{id}")
-    public Mono<ResponseEntity<UserDTOIn>> update(@PathVariable UUID id,@Valid @RequestBody UpdateDTO updateDTO) {
-        Mono<UserDTOIn> UserDTOIn = this.userApplication.update(id, updateDTO);
-        return UserDTOIn.map(user -> ResponseEntity.ok(user)).defaultIfEmpty(ResponseEntity.notFound().build());
+    public Mono<ResponseEntity<Void>> update(@PathVariable UUID id,@Valid @RequestBody UpdateDTO updateDTO) {
+        return this.userApplication.update(id, updateDTO).map(response -> ResponseEntity.ok().<Void>build()).defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)

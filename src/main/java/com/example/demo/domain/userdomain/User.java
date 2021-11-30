@@ -19,6 +19,8 @@ public @NoArgsConstructor @Getter @Setter class User extends EntityBase{
     private String password;
     @Column("rol")
     private String rol;
+    @Column("provider")
+    private String provider;
 
     @Override
     public String toString() {

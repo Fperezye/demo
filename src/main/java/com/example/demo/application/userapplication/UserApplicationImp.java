@@ -43,6 +43,7 @@ public Mono<UserDtoOut> add(UserDTOIn userDTOIn) {
     User user = modelMapper.map(userDTOIn, User.class);
     user.setId(UUID.randomUUID());
     user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
+    user.setProvider("logging");
     user.setThisNew(true);
     UserDtoOut userDto = this.modelMapper.map(user, UserDtoOut.class);
     userDto.setType("Bearer");
@@ -62,22 +63,65 @@ public Mono<UserDtoOut> add(UserDTOIn userDTOIn) {
     }
 
     @Override
-    public Mono<UserDTOIn> update(UUID id, UpdateDTO updateDTO) {
+    public Mono<UserDtoOut> update(UUID id, UpdateDTO updateDTO) {
         return this.findById(id).flatMap( dbUser -> {
-            User userUpdated = this.modelMapper.map(updateDTO, User.class);
-            userUpdated.setId(dbUser.getId());
-            userUpdated.setEmail(dbUser.getEmail());
-            userUpdated.setRol(dbUser.getRol());
-            if(BCrypt.checkpw(updateDTO.getNewPassword(), dbUser.getPassword()) && BCrypt.checkpw(userUpdated.getPassword(), dbUser.getPassword())) {
-                userUpdated.setPassword(dbUser.getPassword());
-            } else {
-                userUpdated.setPassword(BCrypt.hashpw(updateDTO.getNewPassword(), BCrypt.gensalt()));
+            if(dbUser.getFirstname().equals(updateDTO.getFirstname())){
+                User userUpdated = this.modelMapper.map(updateDTO, User.class);
+                userUpdated.setId(dbUser.getId());
+                userUpdated.setEmail(dbUser.getEmail());
+                userUpdated.setRol(dbUser.getRol());
+                userUpdated.validate();
+                if(BCrypt.checkpw(updateDTO.getNewPassword(), dbUser.getPassword()) && BCrypt.checkpw(userUpdated.getPassword(), dbUser.getPassword())) {
+                    userUpdated.setPassword(dbUser.getPassword());
+                } else {
+                    this.modelMapper.map(updateDTO, dbUser);
+                    return dbUser.validate("name", dbUser.getFirstname(), (name) -> this.userWriteRepository.exists(name))
+                    .then(this.userWriteRepository.update(dbUser))
+                    .flatMap(user -> {
+                        logger.info(this.serializeObject(dbUser, "updated")); 
+                        return Mono.just(this.modelMapper.map(user, UserDtoOut.class));
+                    });
+                }  
+            
             }
+            User userUpdated = this.modelMapper.map(updateDTO, User.class);
             userUpdated.validate();
-            return this.userWriteRepository.update(dbUser).flatMap(user -> 
-            Mono.just(this.modelMapper.map(user, UserDTOIn.class)));     
+            return userUpdated.validate("firstname", userUpdated.getFirstname(), (name) -> this.userWriteRepository.exists(name))
+        .then(this.userWriteRepository.update(dbUser)).flatMap(user -> 
+            Mono.just(this.modelMapper.map(user, UserDtoOut.class)));               
+   
+        });
+        
+    } 
+
+/*
+
+    @Override
+    public Mono<IngredientDTOOut> update(UUID id, IngredientDTOIn ingredientDTOIn) {
+        return this.findById(id).flatMap( dbIngredient -> {
+            if(dbIngredient.getName().equals(ingredientDTOIn.getName())){
+                this.modelMapper.map(ingredientDTOIn, dbIngredient);
+                dbIngredient.validate();
+                return this.ingredientWriteRepository.update(dbIngredient).flatMap(ingredient -> Mono.just(this.modelMapper.map(ingredient, IngredientDTOOut.class)));
+            } else{
+                this.modelMapper.map(ingredientDTOIn, dbIngredient);
+                return dbIngredient.validate("name", dbIngredient.getName(), (name) -> this.ingredientWriteRepository.exists(name))
+                .then(this.ingredientWriteRepository.update(dbIngredient))
+                .flatMap(ingredient -> {
+                    logger.info(this.serializeObject(dbIngredient, "updated")); 
+                    return Mono.just(this.modelMapper.map(ingredient, IngredientDTOOut.class));
+                });
+            }   
         });
     } 
+
+*/
+
+
+
+
+
+
     @Override
     public Flux<UserProjection> getAll(String firstname, int page, int size) {
         return this.userReadRepository.getAll(firstname, page, size);
