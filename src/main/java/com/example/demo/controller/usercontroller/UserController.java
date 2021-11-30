@@ -1,9 +1,6 @@
 package com.example.demo.controller.usercontroller;
-
 import java.util.UUID;
-
 import javax.validation.Valid;
-
 import com.example.demo.application.userapplication.UserDTOIn;
 import com.example.demo.application.userapplication.UserDtoOut;
 import com.example.demo.application.userapplication.UpdateDTO;
@@ -23,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -37,7 +33,7 @@ public class UserController {
         this.userApplication = userApplication;
     } 
     
-    @PreAuthorize("hasRole('ROLE_VIEWER')")
+    @PreAuthorize("hasRole('USER')")
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<UserDtoOut> create(@Valid @RequestBody UserDTOIn userDTOIn){
@@ -45,25 +41,18 @@ public class UserController {
 
     }
 
-    /*
-    @ResponseBody Mono<UserDTOIn> add(@RequestBody UserDTOIn userDTOIn) {
-        return this.userApplication.add(userDTOIn);
-    }
-    */
-
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE,  path = "/{id}")
-    public Mono<ResponseEntity<UserDTOIn>> get(@PathVariable UUID id) {
+    public Mono<ResponseEntity<UserDTOIn>> get(@Valid @PathVariable UUID id) {
         Mono<UserDTOIn> UserDTOIn = this.userApplication.get(id);
         return UserDTOIn.map(user -> ResponseEntity.ok(user)).defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, path = "/{id}")
-    public Mono<ResponseEntity<UserDTOIn>> update(@PathVariable UUID id, @RequestBody UpdateDTO updateDTO) {
+    public Mono<ResponseEntity<UserDTOIn>> update(@PathVariable UUID id,@Valid @RequestBody UpdateDTO updateDTO) {
         Mono<UserDTOIn> UserDTOIn = this.userApplication.update(id, updateDTO);
         return UserDTOIn.map(user -> ResponseEntity.ok(user)).defaultIfEmpty(ResponseEntity.notFound().build());
     }
-
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public Flux<UserProjection> getAll(
@@ -73,8 +62,4 @@ public class UserController {
     ){
         return this.userApplication.getAll(firstname, page, size);
     }
-
-
-
-
 }

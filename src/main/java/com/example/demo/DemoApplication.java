@@ -1,7 +1,5 @@
 package com.example.demo;
-
 import com.example.demo.security.JWTAuthorizationFilter;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +16,6 @@ public class DemoApplication {
 		SpringApplication.run(DemoApplication.class, args);
 	}
 
-
 	@EnableWebSecurity
 	@Configuration
 	class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -33,5 +30,4 @@ public class DemoApplication {
 				http.cors();
 		}
 	}
-
 }

@@ -1,10 +1,7 @@
 package com.example.demo.domain.userdomain;
-
 import com.example.demo.core.EntityBase;
-
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -34,5 +31,4 @@ public @NoArgsConstructor @Getter @Setter class User extends EntityBase{
     public boolean isNew() {
         return this.isThisNew();
     }
-
 }

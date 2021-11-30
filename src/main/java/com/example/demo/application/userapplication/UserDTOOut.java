@@ -1,5 +1,4 @@
 package com.example.demo.application.userapplication;
-
 import lombok.Getter;
 import lombok.Setter;
 
