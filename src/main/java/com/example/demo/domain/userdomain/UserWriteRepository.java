@@ -1,10 +1,7 @@
 package com.example.demo.domain.userdomain;
-
 import java.util.UUID;
-
 import com.example.demo.core.functionalInterfaces.ExistsByField;
 import com.example.demo.core.functionalInterfaces.FindById;
-
 import reactor.core.publisher.Mono;
 
 public interface UserWriteRepository extends FindById<User, UUID>, ExistsByField  {
