@@ -25,7 +25,16 @@ public class DemoApplication {
 			http.csrf().disable()
 				.addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
 				.authorizeRequests()
+				.antMatchers(HttpMethod.GET, "/users/{id}").permitAll()
+				.antMatchers(HttpMethod.GET, "/users").permitAll()
 				.antMatchers(HttpMethod.POST, "/users").permitAll()
+				.antMatchers(HttpMethod.PUT, "/users/{id}").permitAll()
+				.antMatchers(HttpMethod.GET, "/ingredients/{id}").permitAll()
+				.antMatchers(HttpMethod.GET, "/ingredients").permitAll()
+				.antMatchers(HttpMethod.POST, "/ingredients").permitAll()
+				.antMatchers(HttpMethod.PUT, "/ingredients/{id}").permitAll()
+				.antMatchers(HttpMethod.DELETE, "/ingredients/{id}").permitAll()
+				.antMatchers(HttpMethod.POST, "/pizzas").permitAll()
 				.anyRequest().authenticated();
 				http.cors();
 		}

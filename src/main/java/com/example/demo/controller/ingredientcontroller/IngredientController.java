@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -38,25 +40,27 @@ public class IngredientController {
         this.ingredientApplication = ingredientApplication;
     } 
       
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody public Mono<IngredientDTOOut> add(@Valid @RequestBody IngredientDTOIn ingredientDTOIn) {
         return this.ingredientApplication.add(ingredientDTOIn);
     }
 
-
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE,  path = "/{id}")
     public Mono<ResponseEntity<IngredientDTOOut>> get(@Valid @PathVariable UUID id) {
         Mono<IngredientDTOOut> ingredientDTOOut = this.ingredientApplication.get(id);
         return ingredientDTOOut.map(ingredient -> ResponseEntity.ok(ingredient)).defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, path = "/{id}")
     public Mono<ResponseEntity<Void>> update(@PathVariable UUID id, @Valid @RequestBody IngredientDTOIn ingredientDTOIn) {
         return this.ingredientApplication.update(id, ingredientDTOIn).map(response -> ResponseEntity.ok().<Void>build()).defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(path = "/{id}")
     public Mono<ResponseEntity<Void>> delete(@PathVariable UUID id) {
         return this.ingredientApplication.delete(id).map( response -> ResponseEntity.ok().<Void>build()).defaultIfEmpty(ResponseEntity.notFound().build());
