@@ -2,6 +2,7 @@ package com.example.demo.infraestructure.ingredientinfraestructure;
 
 import java.util.UUID;
 
+import com.example.demo.core.exceptions.BadRequestException;
 import com.example.demo.domain.ingredientdomain.Ingredient;
 import com.example.demo.domain.ingredientdomain.IngredientProjection;
 import com.example.demo.domain.ingredientdomain.IngredientReadRepository;
@@ -31,6 +32,11 @@ public class IngredientRepositoryImp implements IngredientWriteRepository, Ingre
     @Override
     public Mono<Ingredient> findById(UUID id) {
         return this.ingredientReactiveRepository.findById(id);
+    }
+
+    @Override
+    public Mono<Ingredient> findByIdBadRequest(UUID id) {
+        return this.ingredientReactiveRepository.findById(id).switchIfEmpty(Mono.error(new BadRequestException()));
     }
 
     @Override
