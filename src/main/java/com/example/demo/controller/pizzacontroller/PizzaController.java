@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -28,6 +30,7 @@ public class PizzaController {
         this.pizzaApplication = pizzaApplication;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public Mono<PizzaDTOOut> create(@Valid @RequestBody PizzaDTOIn pizzaDTOIn){
         

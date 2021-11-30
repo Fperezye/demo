@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface UserReactiveRepositoryImp  extends ReactiveCrudRepository<User, UUID> {
 
-    @Query("SELECT i.id, i.firstname, i.lastname, i.email, i.password i.rol i.provider FROM users i WHERE (:firstname is NULL OR i.firstname LIKE concat('%', :firstname, '%')) limit :size offset :page")
+    @Query("SELECT i.id, i.firstname, i.lastname, i.email, i.password, i.rol FROM users i WHERE (:firstname is NULL OR i.firstname LIKE concat('%', :firstname, '%')) limit :size offset :page")
     Flux<UserProjection> findByCriteria(@Param("firstname") String firstname, int size, int page);
 
     @Query("SELECT CASE WHEN COUNT(id)>0 THEN true ELSE false END FROM users WHERE firstname = :firstname")
