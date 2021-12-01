@@ -6,8 +6,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface UserApplication {
-    public Mono<UserDtoOut> add(@Valid UserDTOIn userDTOIn);
+    public Mono<UserDTOOut> add(@Valid UserDTOIn userDTOIn);
     public Mono<UserDTOIn> get(UUID id);
-    public Mono<UserDtoOut> update(UUID id, UpdateDTO updateDTO);
+    public Mono<UserDTOOut> update(UUID id, UpdateDTO updateDTO);
     public Flux<UserProjection> getAll(String firstname,  int page, int size);
 }

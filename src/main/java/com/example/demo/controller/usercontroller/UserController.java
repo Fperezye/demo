@@ -2,7 +2,7 @@ package com.example.demo.controller.usercontroller;
 import java.util.UUID;
 import javax.validation.Valid;
 import com.example.demo.application.userapplication.UserDTOIn;
-import com.example.demo.application.userapplication.UserDtoOut;
+import com.example.demo.application.userapplication.UserDTOOut;
 import com.example.demo.application.userapplication.UpdateDTO;
 import com.example.demo.application.userapplication.UserApplication;
 import com.example.demo.domain.userdomain.UserProjection;
@@ -36,7 +36,7 @@ public class UserController {
     @PreAuthorize("hasRole('USER')")
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<UserDtoOut> create(@Valid @RequestBody UserDTOIn userDTOIn){
+    public Mono<UserDTOOut> create(@Valid @RequestBody UserDTOIn userDTOIn){
         return this.userApplication.add(userDTOIn);
 
     }

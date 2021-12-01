@@ -39,13 +39,13 @@ public class UserApplicationImp extends ApplicationBase<User, UUID> implements U
         }
 
 @Override
-public Mono<UserDtoOut> add(UserDTOIn userDTOIn) {
+public Mono<UserDTOOut> add(UserDTOIn userDTOIn) {
     User user = modelMapper.map(userDTOIn, User.class);
     user.setId(UUID.randomUUID());
     user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
     user.setProvider("logging");
     user.setThisNew(true);
-    UserDtoOut userDto = this.modelMapper.map(user, UserDtoOut.class);
+    UserDTOOut userDto = this.modelMapper.map(user, UserDTOOut.class);
     userDto.setType("Bearer");
     userDto.setToken(getJWTToken(user.getId()));
     userDto.setRefreshToken(NanoIdUtils.randomNanoId());
@@ -63,7 +63,7 @@ public Mono<UserDtoOut> add(UserDTOIn userDTOIn) {
     }
 
     @Override
-    public Mono<UserDtoOut> update(UUID id, UpdateDTO updateDTO) {
+    public Mono<UserDTOOut> update(UUID id, UpdateDTO updateDTO) {
         return this.findById(id).flatMap( dbUser -> {
             if(dbUser.getFirstname().equals(updateDTO.getFirstname())){
                 User userUpdated = this.modelMapper.map(updateDTO, User.class);
@@ -79,7 +79,7 @@ public Mono<UserDtoOut> add(UserDTOIn userDTOIn) {
                     .then(this.userWriteRepository.update(dbUser))
                     .flatMap(user -> {
                         logger.info(this.serializeObject(dbUser, "updated")); 
-                        return Mono.just(this.modelMapper.map(user, UserDtoOut.class));
+                        return Mono.just(this.modelMapper.map(user, UserDTOOut.class));
                     });
                 }  
             
@@ -88,7 +88,7 @@ public Mono<UserDtoOut> add(UserDTOIn userDTOIn) {
             userUpdated.validate();
             return userUpdated.validate("firstname", userUpdated.getFirstname(), (name) -> this.userWriteRepository.exists(name))
         .then(this.userWriteRepository.update(dbUser)).flatMap(user -> 
-            Mono.just(this.modelMapper.map(user, UserDtoOut.class)));               
+            Mono.just(this.modelMapper.map(user, UserDTOOut.class)));               
    
         });
         
