@@ -1,9 +1,9 @@
 package com.example.demo.domain.imagedomain;
 
-import java.util.UUID;
-
 import javax.persistence.Embeddable;
 import javax.persistence.Entity;
+import javax.validation.constraints.NotEmpty;
+
 import com.example.demo.core.EntityBase;
 
 import org.springframework.data.redis.core.RedisHash;
@@ -24,35 +24,6 @@ public @NoArgsConstructor @Getter @Setter class Image extends EntityBase {
 
     @NotEmpty
     private byte[] image;
-
-    @Override
-    public boolean isNew() {
-        return this.isThisNew();
-    }
-
-    public boolean isThisNew() {
-        return false;
-    }
-
-    @Override
-    public UUID getId() {
-
-        return null;
-    }
-
-    public void setThisNew(boolean b) {
-    }
-
-    public void setId(UUID randomUUID) {
-    }
-
-    public Object getImage() {
-        return null;
-    }
-
-    public void setImage(byte[] bytes) {
-
-    }
 
     public byte[] getContent() {
         return null;
