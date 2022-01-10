@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.Column;
+// import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -16,18 +17,17 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.example.demo.core.EntityBase;
+// import com.example.demo.domain.imagedomain.Image;
 import com.example.demo.domain.ingredientdomain.Ingredient;
 
-import org.springframework.data.relational.core.mapping.Table;
+import org.hibernate.annotations.Type;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Entity
-@Table("pizza")
 public @NoArgsConstructor @AllArgsConstructor @Getter @Setter class Pizza extends EntityBase{
 
     @NotBlank
@@ -39,9 +39,11 @@ public @NoArgsConstructor @AllArgsConstructor @Getter @Setter class Pizza extend
     private BigDecimal price;
 
     @NotNull
+    @Type(type = "uuid-binary")
+    @Column(columnDefinition = "binary(16)")
     private UUID image;
 
-    @ManyToMany @JoinTable(name = "pizzaIngredient", joinColumns = @JoinColumn(name="ingredient_id"), inverseJoinColumns = @JoinColumn(name = "pizza_id"))
+    @ManyToMany @JoinTable(name = "pizzaIngredient", joinColumns = @JoinColumn(name="pizza_id"), inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
     private final Set<Ingredient> ingredients = new HashSet<Ingredient>();
 
     public void addIngredient(Ingredient ingredient){
@@ -66,4 +68,8 @@ public @NoArgsConstructor @AllArgsConstructor @Getter @Setter class Pizza extend
         return totalPrice;
     }
 
+    @Override
+    public String toString() {
+        return String.format("Pizza {id: %s, name: %s, price: %s, with ingredients:[%s]}", this.getId(), this.getName(), this.getPrice(), this.getIngredients().toString());
+    }
 }

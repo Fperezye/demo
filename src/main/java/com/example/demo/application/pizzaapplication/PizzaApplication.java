@@ -1,8 +1,14 @@
 package com.example.demo.application.pizzaapplication;
 
-import reactor.core.publisher.Mono;
+import java.util.UUID;
+import java.util.List;
+
+import com.example.demo.domain.pizzadomain.PizzaProjection;
 
 public interface PizzaApplication {
     
-    public Mono<PizzaDTOOut> add(PizzaDTOIn dto);  
+    public PizzaDTOOut add(PizzaDTOIn dto);
+    public PizzaDTOOut get(UUID id);
+    public void delete(UUID id);
+    public List<PizzaProjection> getAll(String name,  int page, int size);
 }

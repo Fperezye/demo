@@ -1,8 +1,8 @@
 package com.example.demo.domain.ingredientdomain;
 
-import reactor.core.publisher.Flux;
+import java.util.List;
 
 public interface IngredientReadRepository {
     
-    public Flux<IngredientProjection> getAll(String name, int page, int size);
+    public List<IngredientProjection> getAll(String name, int page, int size);
 }

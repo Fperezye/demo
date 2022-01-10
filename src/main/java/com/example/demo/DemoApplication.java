@@ -35,6 +35,9 @@ public class DemoApplication {
 				.antMatchers(HttpMethod.PUT, "/ingredients/{id}").permitAll()
 				.antMatchers(HttpMethod.DELETE, "/ingredients/{id}").permitAll()
 				.antMatchers(HttpMethod.POST, "/pizzas").permitAll()
+				.antMatchers(HttpMethod.GET, "/pizzas/{id}").permitAll()
+				.antMatchers(HttpMethod.GET, "/pizzas").permitAll()
+				.antMatchers(HttpMethod.DELETE, "/pizzas/{id}").permitAll()
 				.anyRequest().authenticated();
 				http.cors();
 		}

@@ -1,5 +1,6 @@
 package com.example.demo.application.ingredientapplication;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.example.demo.core.ApplicationBase;
@@ -13,11 +14,8 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
 @Service
-public class IngredientApplicationImp extends ApplicationBase<Ingredient, UUID> implements IngredientApplication{
+public class IngredientApplicationImp extends ApplicationBase<Ingredient, UUID> implements IngredientApplication {
 
     private final IngredientWriteRepository ingredientWriteRepository;
     private final IngredientReadRepository ingredientReadRepository;
@@ -25,65 +23,73 @@ public class IngredientApplicationImp extends ApplicationBase<Ingredient, UUID> 
     private final Logger logger;
 
     @Autowired
-    public IngredientApplicationImp (final IngredientWriteRepository ingredientWriteRepository, final IngredientReadRepository ingredientReadRepository, 
-    final ModelMapper modelMapper, final Logger logger){
-        super((id) -> ingredientWriteRepository.findById(id));
+    public IngredientApplicationImp(final IngredientWriteRepository ingredientWriteRepository,
+                                    final IngredientReadRepository ingredientReadRepository,
+                                    final ModelMapper modelMapper,
+                                    final Logger logger){
 
-        this.ingredientReadRepository = ingredientReadRepository;
+        super((id) -> ingredientWriteRepository.findById(id));
+        
         this.ingredientWriteRepository = ingredientWriteRepository;
+        this.ingredientReadRepository = ingredientReadRepository;
         this.modelMapper = modelMapper;
         this.logger = logger;
     }
 
     @Override
-    public Mono<IngredientDTOOut> add(IngredientDTOIn ingredientDTOIn) {
-        Ingredient ingredient = modelMapper.map(ingredientDTOIn, Ingredient.class);
+    public IngredientDTOOut add(IngredientDTOIn dto) {
+
+        Ingredient ingredient = modelMapper.map(dto, Ingredient.class);
         ingredient.setId(UUID.randomUUID());
-        ingredient.setThisNew(true);
-        return ingredient.validate("name", ingredient.getName(), (name) -> this.ingredientWriteRepository.exists(name))
-        .then(this.ingredientWriteRepository.add(ingredient))
-        .flatMap(entity -> {
-            logger.info(this.serializeObject(entity, "added")); 
-            return Mono.just(this.modelMapper.map(entity, IngredientDTOOut.class));
-        });
+        ingredient.validate("name", ingredient.getName(), (name)-> this.ingredientWriteRepository.exists(name));
+
+        this.ingredientWriteRepository.add(ingredient);
+        logger.info(this.serializeObject(ingredient, "added"));
+
+        return modelMapper.map(ingredient, IngredientDTOOut.class);
     }
 
     @Override
-    public Mono<IngredientDTOOut> get(UUID id) {
-        return this.findById(id).flatMap( dbingredient -> Mono.just(this.modelMapper.map(dbingredient, IngredientDTOOut.class)));
+    public IngredientDTOOut get(UUID id) {
+
+        Ingredient ingredient = this.findById(id);
+        return this.modelMapper.map(ingredient, IngredientDTOOut.class);
     }
 
     @Override
-    public Mono<IngredientDTOOut> update(UUID id, IngredientDTOIn ingredientDTOIn) {
-        return this.findById(id).flatMap( dbIngredient -> {
-            if(dbIngredient.getName().equals(ingredientDTOIn.getName())){
-                this.modelMapper.map(ingredientDTOIn, dbIngredient);
-                dbIngredient.validate();
-                return this.ingredientWriteRepository.update(dbIngredient).flatMap(ingredient -> Mono.just(this.modelMapper.map(ingredient, IngredientDTOOut.class)));
-            } else{
-                this.modelMapper.map(ingredientDTOIn, dbIngredient);
-                return dbIngredient.validate("name", dbIngredient.getName(), (name) -> this.ingredientWriteRepository.exists(name))
-                .then(this.ingredientWriteRepository.update(dbIngredient))
-                .flatMap(ingredient -> {
-                    logger.info(this.serializeObject(dbIngredient, "updated")); 
-                    return Mono.just(this.modelMapper.map(ingredient, IngredientDTOOut.class));
-                });
-            }   
-        });
-    } 
+    public void update(UUID id, IngredientDTOIn dtos) {
 
-    @Override
-    public Mono<IngredientDTOOut> delete(UUID id) {
-        return this.findById(id).flatMap(ingredient -> {
-            logger.info(this.serializeObject(ingredient, "deleted")); 
-            return this.ingredientWriteRepository.delete(ingredient)
-            .then(Mono.just(this.modelMapper.map(ingredient, IngredientDTOOut.class)));
-        });
+        Ingredient ingredient = modelMapper.map(dtos, Ingredient.class);
+        ingredient.setId(id);
+        ingredient.validate("name", ingredient.getName(), (name)-> this.ingredientWriteRepository.exists(name));
+
+        this.ingredientWriteRepository.update(ingredient);
+        logger.info(this.serializeObject(ingredient, "updated"));
     }
 
     @Override
-    public Flux<IngredientProjection> getAll(String name, int page, int size) {
+    public void delete(UUID id) {
+
+        Ingredient ingredient = this.findById(id);
+        this.ingredientWriteRepository.delete(ingredient);
+        logger.info(this.serializeObject(ingredient, "deleted"));
+    }
+
+    @Override
+    public List<IngredientProjection> getAll(String name, int page, int size) {
         return this.ingredientReadRepository.getAll(name, page, size);
+    }
+
+    protected String serializeObject(Ingredient ingredient, String messege){
+        StringBuilder stringBuilder = new StringBuilder("Ingredient {id: ").append(ingredient.getId())
+                                                                           .append(", name: ")
+                                                                           .append(ingredient.getName())
+                                                                           .append(", price: ")
+                                                                           .append(ingredient.getPrice())
+                                                                           .append("} ")
+                                                                           .append(messege)
+                                                                           .append(" successfully.");
+        return stringBuilder.toString();
     }
 }
 

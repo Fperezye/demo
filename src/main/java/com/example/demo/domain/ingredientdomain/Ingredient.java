@@ -11,15 +11,13 @@ import javax.validation.constraints.NotNull;
 
 import com.example.demo.core.EntityBase;
 
-import org.springframework.data.relational.core.mapping.Table;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table("ingredients")
 public @NoArgsConstructor @Getter @Setter class Ingredient extends EntityBase{
+
     @NotBlank
     @Column(nullable = false, unique = true)
     private String name;
@@ -28,4 +26,9 @@ public @NoArgsConstructor @Getter @Setter class Ingredient extends EntityBase{
     @Column(nullable = false, precision = 3, scale = 2)
     private BigDecimal price;
 
+    @Override
+    public String toString() {
+
+        return String.format("Ingredient {id: %s, name: %s, price: %s}", this.getId(), this.getName(), this.getPrice());
+    }
 }
