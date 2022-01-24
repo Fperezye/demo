@@ -2,7 +2,10 @@ package com.example.demo.domain.pizzadomain;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+
 public interface PizzaReadRepository {
     
-    public List<PizzaProjection> getAll(String name, int page, int size);
+    public Page<PizzaProjection> getAll(String name, Pageable page);
 }

@@ -9,7 +9,9 @@ import com.example.demo.domain.pizzadomain.PizzaReadRepository;
 import com.example.demo.domain.pizzadomain.PizzaProjection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -38,11 +40,17 @@ public class PizzaRepositoryImp implements PizzaWriteRepository, PizzaReadReposi
     }
 
     @Override
-    public List<PizzaProjection> getAll(String name, int page, int size) {
+    public Page<PizzaProjection> getAll(String name, Pageable page) {
         return this.pizzaJPARepository.findByCriteria(name,
-        PageRequest.of(page, size));
+        page);
     }
 
+    // @Override
+    // public Page<PizzaProjection> getAll(String name, Pageable page) {
+    //     if(name == null){return this.pizzaJPARepository.findAll(page);}
+    //     return this.pizzaJPARepository.findByNameContaining(name,
+    //     page);
+    // }
 
     @Override
     public Integer exists(String name) {

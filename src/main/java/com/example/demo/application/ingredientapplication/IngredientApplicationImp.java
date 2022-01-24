@@ -12,6 +12,8 @@ import com.example.demo.domain.ingredientdomain.IngredientWriteRepository;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -76,8 +78,8 @@ public class IngredientApplicationImp extends ApplicationBase<Ingredient, UUID> 
     }
 
     @Override
-    public List<IngredientProjection> getAll(String name, int page, int size) {
-        return this.ingredientReadRepository.getAll(name, page, size);
+    public Page<IngredientProjection> getAll(String name, Pageable page) {
+        return this.ingredientReadRepository.getAll(name, page);
     }
 
     protected String serializeObject(Ingredient ingredient, String messege){

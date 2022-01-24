@@ -2,7 +2,10 @@ package com.example.demo.domain.ingredientdomain;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 public interface IngredientReadRepository {
     
-    public List<IngredientProjection> getAll(String name, int page, int size);
+    public Page<IngredientProjection> getAll(String name, Pageable page);
 }

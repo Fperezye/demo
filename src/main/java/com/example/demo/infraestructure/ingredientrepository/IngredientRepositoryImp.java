@@ -10,7 +10,9 @@ import com.example.demo.domain.ingredientdomain.IngredientReadRepository;
 import com.example.demo.domain.ingredientdomain.IngredientWriteRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -44,9 +46,9 @@ public class IngredientRepositoryImp implements IngredientWriteRepository, Ingre
     }
 
     @Override
-    public List<IngredientProjection> getAll(String name, int page, int size) {
+    public Page<IngredientProjection> getAll(String name, Pageable page) {
         return this.ingredientJPARepository.findByCriteria(name,
-        PageRequest.of(page, size));
+        page);
     }
 
 

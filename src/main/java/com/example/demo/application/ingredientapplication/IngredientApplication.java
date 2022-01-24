@@ -4,6 +4,9 @@ import java.util.UUID;
 
 import com.example.demo.domain.ingredientdomain.IngredientProjection;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 
 
@@ -13,5 +16,5 @@ public interface IngredientApplication {
     public IngredientDTOOut get(UUID id);
     public void update(UUID id, IngredientDTOIn dtos);
     public void delete(UUID id);
-    public List<IngredientProjection> getAll(String name,  int page, int size);
+    public Page<IngredientProjection> getAll(String name,  Pageable page);
 }

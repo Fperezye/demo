@@ -14,6 +14,8 @@ import com.example.demo.domain.pizzadomain.PizzaProjection;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -72,8 +74,8 @@ public class PizzaApplicationImp extends ApplicationBase<Pizza, UUID> implements
     }
 
     @Override
-    public List<PizzaProjection> getAll(String name, int page, int size) {
-        return this.pizzaReadRepository.getAll(name, page, size);
+    public Page<PizzaProjection> getAll(String name, Pageable page) {
+        return this.pizzaReadRepository.getAll(name, page);
     }
 
     protected String serializeObject(Pizza pizza, String messege){
